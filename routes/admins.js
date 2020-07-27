@@ -2,7 +2,6 @@ var express = require('express');
 var router = express.Router();
 const passport = require('passport');
 const authenticate = require('../authenticate');
-
 const {Admin} = require('../models');
 
 router.get('/', function(req, res, next) {
@@ -13,10 +12,9 @@ router.post('/signup', (req, res, err) =>{
   Admin.register(new Admin({username: req.body.username}),
     req.body.password, (err, user) => {
       if(err){
-        res.statusCode = 500;
+        res.statusCode = 409;
         res.setHeader('Content-Type', 'application/json');
-        res.json({err: err});
-        return;
+        return res.json({err: err}).end();
       }
       else{
         user.save((err, user) => {
@@ -47,18 +45,10 @@ router.post('/login', passport.authenticate('local'), (req, res) => {
   res.json({success: true, token: token, status: 'Successfully logged in!'});
 });
 
-router.get('/logout', (req, res, next) => {
-  if (req.user || req.session.username){
-    req.session.destroy();
-    res.clearCookie('session-id');
-    res.json({logout: true})
-  }
-  else{
-    var err = new Error('You are not logged in');
-    err.status = 403;
-    next(err);
-    return;
-  }
+router.get('/logout', authenticate.verifyUser, (req, res) => {
+  req.session.destroy();
+  res.clearCookie('session-id');
+  res.json({logout: true});
 });
 
 module.exports = router;

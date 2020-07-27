@@ -5,7 +5,7 @@ const InternshipModel = new Schema({
     name: { type: String, required: true},
 	company: { type: String, required: true },
 	details:{ type: String, required: true },
-	class: { type: String, enum: [ 'technical', 'non-technical' ]},
+	class: { type: String, enum: [ 'Technical', 'Non-Technical' ]},
 	pointsBreakup : [ { category: String, points: Number } ]
 });
 

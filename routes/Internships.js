@@ -13,13 +13,14 @@ router.get('/', (req, res, next) => {
     });
 });
 
-router.post('/', authenticate.verifyUser, (req, res, next) => {
+router.post('/', authenticate.verifyUser, (req, res) => {
     const newPost = {name: req.body.name, company: req.body.company, details: req.body.details, class: req.body.class, pointsBreakup: req.body.pointsBreakup};
     Internship.create(newPost).then((post) => {
         res.statusCode = 200;
         res.setHeader('Content-Type', 'application/json');
         res.json(post).end();
-    }).catch(() => {
+    }).catch((err) => {
+        console.log("error: ", err);
         res.statusCode =  500;
         res.send('There was an error creating post').end();
     });
