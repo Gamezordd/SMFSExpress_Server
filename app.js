@@ -7,7 +7,7 @@ const mongoose = require('mongoose');
 const session = require('express-session');
 const cors = require('cors');
 const dotenv = require('dotenv').config;
-const {config} = require('./config-local');
+const {config} = require('./config');
 
 const {AdminRouter, InternRouter} = require('./routes');
 const passport = require('passport');
