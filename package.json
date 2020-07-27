@@ -6,7 +6,8 @@
     "start": "node app.js"
   },
   "engines": {
-    "node": "12.13.0"
+    "node": "12.13.0",
+    "npm": "6.14.6"
   },
   "dependencies": {
     "assert": "^2.0.0",
