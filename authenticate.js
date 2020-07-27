@@ -3,7 +3,7 @@ const passport = require('passport');
 const JwtStrategy = require('passport-jwt').Strategy;
 const extract_jwt = require('passport-jwt').ExtractJwt;
 const { sign } = require('jsonwebtoken');
-const {config} = require('./config');
+const {config} = require('./config-local');
 const {Admin} = require('./models');
 
 exports.local = passport.use(new LocalStrategy(Admin.authenticate()));
