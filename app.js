@@ -6,7 +6,8 @@ var logger = require('morgan');
 const mongoose = require('mongoose');
 const session = require('express-session');
 const cors = require('cors');
-const {config} = require('./config');
+const dotenv = require('dotenv').config;
+const {config} = require('./config-local');
 
 const {AdminRouter, InternRouter} = require('./routes');
 const passport = require('passport');
@@ -48,5 +49,9 @@ app.use(function(err, req, res, next) {
   res.status(err.status || 500);
   res.render('error');
 });
+
+const port = process.env.PORT || 3000;
+
+app.listen(port);
 
 module.exports = app;
