@@ -38,13 +38,11 @@ app.use(session({secret: 'StudyMonk', resave: false, saveUninitialized: true, st
 app.use(passport.initialize());
 app.use(passport.session());
 app.use(express.static(path.join(__dirname, 'public')));
-app.use(cors({origin: 'http://localhost:3001', credentials: true}));
+app.use(cors({credentials: true}));
 
 
 app.get('/', function(req, res) {
-  console.log("req: ", req);
   if(req.cookies){
-    console.log("cook: ", req.cookies.studymonk);
     if(req.cookies && req.cookies.studymonk){
       Admin.findOne({_id: req.cookies.studymonk}, (err, user) => {
         if(err){
