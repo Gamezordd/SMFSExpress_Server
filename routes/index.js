@@ -1,2 +1,2 @@
-exports.AdminRouter = require('./admins');
-exports.InternRouter = require('./Internships');
+exports.AdminRouter = require("./admins");
+exports.InternRouter = require("./Internships");
