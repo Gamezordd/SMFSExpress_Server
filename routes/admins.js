@@ -1,10 +1,21 @@
 var express = require('express');
 var router = express.Router();
+const cookieParser = require('cookie-parser');
 const passport = require('passport');
 const authenticate = require('../authenticate');
 const {Admin} = require('../models');
 
+router.use(cookieParser());
+
 router.get('/', function(req, res, next) {
+  if(req.session.custId){
+    req.session.custId++;
+    console.log("has cookie", req.session.custId);
+  }
+  else{
+    req.session.cusiId = 1;
+    console.log("no cookie");
+  }
   res.send('respond with a resource');
 });
 
@@ -39,13 +50,13 @@ router.post('/signup', (req, res, err) =>{
 router.post('/login', passport.authenticate('local'), (req, res) => {
   console.log("inside");
   const token = authenticate.getToken({_id: req.user._id});
-  req.session.username = req.body.email;
+  req.session.cookie.custId = req.user._id;
   res.statusCode = 200;
   res.setHeader('Content-Type', 'application/json');
   res.json({success: true, token: token, status: 'Successfully logged in!'});
 });
 
-router.get('/logout', authenticate.verifyUser, (req, res) => {
+router.get('/logout', (req, res) => {
   req.session.destroy();
   res.clearCookie('session-id');
   res.json({logout: true});
