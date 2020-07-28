@@ -14,7 +14,6 @@ const auth = require('./authenticate');
 const {AdminRouter, InternRouter} = require('./routes');
 const passport = require('passport');
 const { Admin } = require('./models');
-const { authenticate } = require('passport');
 
 var connect = mongoose.connect(config.mongoUrl, {useFindAndModify: false});
 var connectcreate = mongoose.createConnection(config.mongoUrl);
@@ -38,7 +37,7 @@ app.use(session({secret: 'StudyMonk', resave: false, saveUninitialized: true, st
 app.use(passport.initialize());
 app.use(passport.session());
 app.use(express.static(path.join(__dirname, 'public')));
-app.use(cors({credentials: true}));
+app.use(cors({credentials: true, origin:"https://gamezordd.github.io"}));
 
 
 app.get('/', function(req, res) {
