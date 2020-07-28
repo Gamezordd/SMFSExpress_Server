@@ -38,31 +38,31 @@ app.use(session({secret: 'StudyMonk', resave: false, saveUninitialized: true, st
 app.use(passport.initialize());
 app.use(passport.session());
 app.use(express.static(path.join(__dirname, 'public')));
-app.use(cors());
+app.use(cors({origin: 'http://localhost:3001', credentials: true}));
 
 
 app.get('/', function(req, res) {
-  console.log(req.session);
-  console.log(req.user);
-  if(req.session.passport){
-    console.log("has cookie", req.session.passport.user);
-    Admin.findOne({username: req.session.passport.user}, (err, user) => {
-      if(err){
-          console.log("error")
-      }
-      else if(user){
-          console.log("_id: ", req.session);
-          const token = auth.getToken({_id:req.user._id});
+  console.log("req: ", req);
+  if(req.cookies){
+    console.log("cook: ", req.cookies.studymonk);
+    if(req.cookies && req.cookies.studymonk){
+      Admin.findOne({_id: req.cookies.studymonk}, (err, user) => {
+        if(err){
+            res.statusCode = 500;
+            res.send("Error");
+        }
+        else if(user){
+          const token = auth.getToken({_id: req.cookies.studymonk});
           res.statusCode = 200;
           res.setHeader('Content-Type', 'application/json');
-          res.json({success: true, token: token, status: 'Welcome Back!'});
-      }
-    });
-  }
-  else{
-    console.log("no cookie", req.session);
-    res.statusCode = 401;
-    res.end();
+          res.json({success: true, token: token, status: 'Welcome back!'});
+        }
+      });
+    }
+    else{
+      res.statusCode = 401;
+      res.send('Not authorized');
+    }
   }
 });
 app.use('/admin', AdminRouter);

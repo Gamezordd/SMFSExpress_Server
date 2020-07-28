@@ -4,6 +4,7 @@ const cookieParser = require('cookie-parser');
 const passport = require('passport');
 const authenticate = require('../authenticate');
 const {Admin} = require('../models');
+const cors = require('cors');
 
 router.use(cookieParser());
 
@@ -47,18 +48,25 @@ router.post('/signup', (req, res, err) =>{
     });
 });
 
-router.post('/login', passport.authenticate('local'), (req, res) => {
+router.post('/login', cors({origin: 'http://localhost:3001'}), passport.authenticate('local'), (req, res) => {
   console.log("inside");
   const token = authenticate.getToken({_id: req.user._id});
   req.session.cookie.custId = req.user._id;
+  res.cookie('studymonk', req.user._id, {
+    maxAge: 60*60*2*60,
+    httpOnly: true,
+    sameSite: true,
+    secure: false
+  });
+  console.log("set new cookie");
   res.statusCode = 200;
   res.setHeader('Content-Type', 'application/json');
-  res.json({success: true, token: token, status: 'Successfully logged in!'});
+  res.json({success: true, token: token, status: 'Successfully logged in!'}).end();
 });
 
 router.get('/logout', (req, res) => {
   req.session.destroy();
-  res.clearCookie('session-id');
+  res.clearCookie('studymonk');
   res.json({logout: true});
 });
 
