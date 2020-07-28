@@ -48,7 +48,7 @@ router.post('/signup', (req, res, err) =>{
     });
 });
 
-router.post('/login', cors({origin: 'http://localhost:3001'}), passport.authenticate('local'), (req, res) => {
+router.post('/login', passport.authenticate('local'), (req, res) => {
   console.log("inside");
   const token = authenticate.getToken({_id: req.user._id});
   req.session.cookie.custId = req.user._id;
